@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using EasyAbp.AbpHelper.Core.Services;
 using NuGet.Common;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
@@ -16,7 +17,7 @@ namespace EasyAbp.AbpHelper.Services
         private const string RepoUrl = "https://api.nuget.org/v3/index.json";
         private const string PackageId = "EasyAbp.AbpHelper";
 
-        public async Task CheckUpdate()
+        public async Task CheckUpdateAsync()
         {
             Version latestVersion;
             try
@@ -32,7 +33,7 @@ namespace EasyAbp.AbpHelper.Services
                     NullLogger.Instance, 
                     cancellationToken);
 
-                latestVersion = versions.Max(ver => ver.Version);
+                latestVersion = versions.Max(ver => ver.Version)!;
             }
             catch (Exception)
             {
@@ -45,7 +46,7 @@ namespace EasyAbp.AbpHelper.Services
             if (currentVersion < latestVersion)
             {
                 Log.Warning($"There is a new version of ABPHelper: {latestVersion.ToString(3)}");
-                Log.Warning($"Use `dotnet tool update EasyAbp.AbpHelper -g` to update");
+                Log.Warning($"Use `dotnet tool update {PackageId} -g` to update");
             }
         }
     }
